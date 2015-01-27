@@ -9,7 +9,7 @@ var ngAnnotate = require('gulp-ng-annotate');
 var rename = require("gulp-rename");
 
 var paths = {
-    main_js: ['./src/**/*.js'],
+    main_js: ['./src/js/**/*.js'],
     html: ['./src/index.html']
 };
 
@@ -29,6 +29,8 @@ gulp.task('libs', function() {
         './src/libs/angular-route/angular-route.js',
         './src/libs/angular-sanitize/angular-sanitize.js'])
         .pipe(concat('all.js'))
+        .pipe(uglify())
+        .pipe(rename({extname: ".min.js"}))
         .pipe(gulp.dest('dist/libs'));
 });
 
@@ -37,8 +39,9 @@ gulp.task('htmls', function() {
         .pipe(gulp.dest('dist'));
 });
 
-gulp.task('default',['scripts', 'htmls']);
+gulp.task('default',['scripts', 'libs', 'htmls']);
 
 gulp.task('watch', function() {
-    gulp.watch('src/**/*.*', ['default']);
+    gulp.watch('src/js/*.*', ['default']);
+    gulp.watch('src/index.html', ['default']);
 });
