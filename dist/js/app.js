@@ -1,4 +1,10 @@
-angular.module('myApp').controller('RepositoryController', function ($scope, githubFactory) {
+(function(){
+"use strict";
+angular.module('myApp', ['ngSanitize']);
+})();
+(function(){
+"use strict";
+angular.module('myApp').controller('RepositoryController', ["$scope", "githubFactory", function ($scope, githubFactory) {
 
     var COMMIT_PAGE;
 
@@ -55,4 +61,25 @@ angular.module('myApp').controller('RepositoryController', function ($scope, git
     }
 
     init();
-});
+}]);
+})();
+(function(){
+"use strict";
+angular.module('myApp').factory('githubFactory', ["$http", function ($http){
+    var github = {};
+
+    github.listRepositories = function () {
+        return $http.get('https://api.github.com/orgs/elasticsearch/repos?page=1&per_page=10');
+    };
+
+    github.getCommits = function (repository, page) {
+        return $http.get('https://api.github.com/repos/elasticsearch/' + repository + '/commits?page=' + page + '&per_page=20');
+    };
+
+    github.getContribCount = function (repository) {
+        return $http.get('https://api.github.com/repos/elasticsearch/' + repository + '/contributors');
+    };
+
+    return github;
+}]);
+})();
