@@ -2,19 +2,19 @@
 <html>
 	<head>
 		<title>ElasticSearch Repositories</title>
-		<link href="styles/styles.css" rel="stylesheet" type="text/css">
+		<link href="styles/styles.min.css" rel="stylesheet" type="text/css">
 	</head>
 
 	<body ng-app="myApp">
-		<div id="container" ng-controller="RepositoryController">
+		<div id="container" ng-controller="RepositoryController as vm">
 
 			<div id="sidebar" class="menu_style sidebar">
 				<div class="sidebar_content">
 					<h1 class="sidebar_header menu_font_color">projetos</h1>
 					<nav class="repos">
 						<ul>
-							<li ng-repeat="repository in repositories">
-								<a ng-click="loadRepositoryData(repository)" class="menu_font_color">{{ repository.name }}</a>
+							<li ng-repeat="repository in vm.repositories">
+								<a ng-click="vm.loadRepositoryData(repository)" class="menu_font_color">{{ repository.name }}</a>
 							</li>
 						</ul>
 					</nav>
@@ -22,16 +22,16 @@
 			</div>
 
 			<div id="main" class="main">
-				<div id="content" class="content" ng-if="!notLoaded">
+				<div id="content" class="content" ng-if="!vm.notLoaded">
 					<div class="general_info">
-						<span>stars {{stars}}</span>
-						<span>forks {{forks}}</span>
-						<span>contribs {{contribs}}</span>
+						<span>stars {{vm.stars}}</span>
+						<span>forks {{vm.forks}}</span>
+						<span>contribs {{vm.contribs}}</span>
 					</div>
 
 					<div class="commits">
 						<ul>
-							<li ng-repeat="detail in commits">
+							<li ng-repeat="detail in vm.commits">
 								<span class="commit_date"> {{detail.commit.author.date | date:'dd/MM/yyyy'}} </span>
                 				<img src="{{detail.author.avatar_url}}" width="30" height="30" class="commit_avatar"/>
 								<span class="commit_author_details">
@@ -42,17 +42,15 @@
 						</ul>
 
 						<div class="load_button">
-							<a ng-click="loadMoreCommits()" class="menu_font_color">Carregar mais</a>
+							<a ng-click="vm.loadMoreCommits()" class="menu_font_color">Carregar mais</a>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 
-		<script src="libs/libs.js"></script>
+		<script src="libs/libs.min.js"></script>
 
-		<script src="js/app.js"></script>
-		<script src="js/services/githubFactory.js"></script>
-		<script src="js/controllers/repository.js"></script>
+		<script src="js/all.min.js"></script>
 	</body>
 </html>

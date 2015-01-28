@@ -1,56 +1,60 @@
-angular.module('myApp').controller('RepositoryController', function ($scope, githubFactory) {
+angular.module('myApp').controller('RepositoryController', function (githubFactory) {
+    var vm = this;
 
     var COMMIT_PAGE;
 
+    vm.loadMoreCommits = loadMoreCommits;
+    vm.loadRepositoryData = loadRepositoryData;
+
     function init() {
-        $scope.notLoaded = true;
+        vm.notLoaded = true;
 
-        $scope.repositories = [];
-        $scope.commits = [];
+        vm.repositories = [];
+        vm.commits = [];
 
-        $scope.current_repository = {};
+        vm.current_repository = {};
 
-        $scope.stars = 0;
-        $scope.forks = 0;
-        $scope.contribs = 0;
+        vm.stars = 0;
+        vm.forks = 0;
+        vm.contribs = 0;
 
         getRepositories();
     }
 
-    $scope.loadRepositoryData = function (repo) {
-        $scope.notLoaded = false;
+    function loadRepositoryData(repo) {
+        vm.notLoaded = false;
         COMMIT_PAGE = 1;
-        $scope.current_repository = repo;
+        vm.current_repository = repo;
 
-        $scope.stars = repo.stargazers_count;
-        $scope.forks = repo.forks_count;
+        vm.stars = repo.stargazers_count;
+        vm.forks = repo.forks_count;
 
         githubFactory.getContribCount(repo.name)
             .then(function (response) {
-                $scope.contribs = response.data.length;
+                vm.contribs = response.data.length;
             });
 
         githubFactory.getCommits(repo.name, COMMIT_PAGE)
             .then(function (response) {
-                $scope.commits = response.data;
+                vm.commits = response.data;
             });
-    };
+    }
 
-    $scope.loadMoreCommits = function () {
-        githubFactory.getCommits($scope.current_repository.name, COMMIT_PAGE)
+    function loadMoreCommits() {
+        githubFactory.getCommits(vm.current_repository.name, COMMIT_PAGE)
             .then(function (response) {
                 angular.forEach(response.data, function (value) {
-                    $scope.commits.push(value);
+                    vm.commits.push(value);
                 });
             });
 
         COMMIT_PAGE += 1;
-    };
+    }
 
     function getRepositories() {
         githubFactory.listRepositories()
             .then(function (response) {
-                $scope.repositories = response.data;
+                vm.repositories = response.data;
             });
     }
 

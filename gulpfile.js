@@ -13,18 +13,24 @@ var wrap        = require("gulp-wrap");
 var size        = require('gulp-size');
 
 var paths = {
-    main_js: ['./src/js/**/*.js'],
-    html: ['./src/index.html'],
-    styles: ['./src/styles/*.css'],
-    libs: ['./src/libs/angular/angular.js', 
-        './src/libs/angular-route/angular-route.js',
-        './src/libs/angular-sanitize/angular-sanitize.js']
+    main_js: ['src/js/**/*.js', '!src/js/**/*.min.js'],
+    html: ['src/index.html'],
+    styles: ['src/styles/*.css', '!src/styles/*.min.css'],
+    libs: ['src/libs/angular/angular.js', 
+        'src/libs/angular-route/angular-route.js',
+        'src/libs/angular-sanitize/angular-sanitize.js']
 };
 
-gulp.task('scripts', function() {
+gulp.task('lint', function() {
+    return gulp.src(paths.main_js)
+        .pipe(jshint())
+        .pipe(jshint.reporter('default'));
+});
+
+gulp.task('scripts', ['lint'], function() {
     return gulp.src(paths.main_js)
         .pipe(wrap('(function(){\n"use strict";\n<%= contents %>\n})();'))
-        .pipe(concat('app.js'))
+        .pipe(concat('all.js'))
         .pipe(ngAnnotate())
         .pipe(size({title: 'JS Pre-Minification'}))
         .pipe(gulp.dest('dist/js'))
@@ -32,12 +38,6 @@ gulp.task('scripts', function() {
         .pipe(rename({extname: ".min.js"}))
         .pipe(size({title: 'JS Post-Minification'}))
         .pipe(gulp.dest('dist/js'));
-});
-
-gulp.task('test', function() {
-    return gulp.src(paths.main_js)
-        .pipe(jshint())
-        .pipe(jshint.reporter('default'));
 });
 
 gulp.task('libs', function() {
@@ -66,19 +66,39 @@ gulp.task('htmls', function() {
 });
 
 gulp.task('default',['scripts', 'libs', 'styles', 'htmls']);
+gulp.task('build-dev', ['pre-build-libs', 'pre-build-scripts', 'pre-build-styles']);
 
 gulp.task('watch', function() {
-    gulp.watch('src/js/*.*', ['default']);
-    gulp.watch('src/index.html', ['default']);
-
-    gulp.watch('src/libs/**/*.js', ['build-libs']);
+    gulp.watch(paths.main_js, ['pre-build-scripts']);
+    gulp.watch(paths.styles, ['pre-build-styles']);
+    gulp.watch(paths.libs, ['pre-build-libs']);
 });
 
-gulp.task('build-libs', function() {
+gulp.task('pre-build-libs', function() {
     return gulp.src(paths.libs)
         .pipe(concat('libs.js'))
-        .pipe(gulp.dest('./src/libs'))
-})
+        .pipe(uglify())
+        .pipe(rename({extname: ".min.js"}))
+        .pipe(gulp.dest('src/libs'));
+});
+
+gulp.task('pre-build-scripts', function() {
+    return gulp.src(paths.main_js)
+        .pipe(wrap('(function(){\n"use strict";\n<%= contents %>\n})();'))
+        .pipe(concat('all.js'))
+        .pipe(ngAnnotate())
+        .pipe(uglify())
+        .pipe(rename({extname: ".min.js"}))
+        .pipe(gulp.dest('src/js'));
+});
+
+gulp.task('pre-build-styles', function() {
+    return gulp.src(paths.libs)
+        .pipe(concat('styles.css'))
+        .pipe(minifycss())
+        .pipe(rename({extname: ".min.css"}))
+        .pipe(gulp.dest('src/styles'));
+});
 
 gulp.task('connect', function() {
   connect.server();
