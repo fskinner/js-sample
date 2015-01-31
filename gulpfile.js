@@ -6,15 +6,17 @@ var concat      = require('gulp-concat');
 var uglify      = require('gulp-uglify');
 var jshint      = require('gulp-jshint');
 var ngAnnotate  = require('gulp-ng-annotate');
-var rename      = require("gulp-rename");
+var rename      = require('gulp-rename');
 var minifycss   = require('gulp-minify-css')
 var connect     = require('gulp-connect');
-var wrap        = require("gulp-wrap");
+var wrap        = require('gulp-wrap');
 var size        = require('gulp-size');
+var sass        = require('gulp-sass');
 
 var paths = {
     main_js: ['src/js/**/*.js', '!src/js/**/*.min.js'],
     html: ['src/index.html'],
+    sass_styles: ['src/styles/*.scss'],
     styles: ['src/styles/*.css', '!src/styles/*.min.css'],
     libs: ['src/libs/angular/angular.js', 
         'src/libs/angular-route/angular-route.js',
@@ -29,7 +31,7 @@ gulp.task('lint', function() {
 
 gulp.task('scripts', ['lint'], function() {
     return gulp.src(paths.main_js)
-        .pipe(wrap('(function(){\n"use strict";\n<%= contents %>\n})();'))
+        //.pipe(wrap('(function(){\n"use strict";\n<%= contents %>\n})();'))
         .pipe(concat('all.js'))
         .pipe(ngAnnotate())
         .pipe(size({title: 'JS Pre-Minification'}))
@@ -51,7 +53,13 @@ gulp.task('libs', function() {
         .pipe(gulp.dest('dist/libs'));
 });
 
-gulp.task('styles', function() {
+gulp.task('sass', function () {
+    return gulp.src(paths.sass_styles)
+        .pipe(sass())
+        .pipe(gulp.dest('src/styles'));
+});
+
+gulp.task('styles', ['sass'], function() {
     return gulp.src(paths.styles)
         .pipe(concat('styles.css'))
         .pipe(gulp.dest('dist/styles'))
@@ -92,8 +100,8 @@ gulp.task('pre-build-scripts', function() {
         .pipe(gulp.dest('src/js'));
 });
 
-gulp.task('pre-build-styles', function() {
-    return gulp.src(paths.libs)
+gulp.task('pre-build-styles', ['sass'], function() {
+    return gulp.src(paths.styles)
         .pipe(concat('styles.css'))
         .pipe(minifycss())
         .pipe(rename({extname: ".min.css"}))

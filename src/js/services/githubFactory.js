@@ -1,17 +1,24 @@
-angular.module('myApp').factory('githubFactory', function ($http){
-    var github = {};
+(function (){
+  'use strict';
 
-    github.listRepositories = function () {
-        return $http.get('https://api.github.com/orgs/elasticsearch/repos?page=1&per_page=10');
-    };
+  angular.module('myApp').factory('githubFactory', function ($http){
 
-    github.getCommits = function (repository, page) {
-        return $http.get('https://api.github.com/repos/elasticsearch/' + repository + '/commits?page=' + page + '&per_page=20');
-    };
+      return {
+          listRepositories: listRepositories,
+          getCommits: getCommits,
+          getContribCount: getContribCount
+      };
 
-    github.getContribCount = function (repository) {
-        return $http.get('https://api.github.com/repos/elasticsearch/' + repository + '/contributors');
-    };
+      function listRepositories() {
+          return $http.get('https://api.github.com/orgs/elasticsearch/repos?page=1&per_page=10');
+      }
 
-    return github;
-});
+      function getCommits(repository, page) {
+          return $http.get('https://api.github.com/repos/elasticsearch/' + repository + '/commits?page=' + page + '&per_page=20');
+      }
+
+      function getContribCount(repository) {
+          return $http.get('https://api.github.com/repos/elasticsearch/' + repository + '/contributors');
+      }
+  });
+})();
