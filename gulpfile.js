@@ -47,12 +47,7 @@ gulp.task('libs', function() {
         .pipe(gulp.dest('dist/libs'));
 });
 
-gulp.task('sass', function () {
-    return gulp.src(paths.sass_styles)
-        .pipe(sass())
-        .pipe(rename({basename: "styles"}))
-        .pipe(gulp.dest('src/styles'));
-});
+
 
 gulp.task('htmls', function() {
     return gulp.src(paths.html)
@@ -81,7 +76,7 @@ gulp.task('pre-build-libs', function() {
 
 gulp.task('pre-build-scripts', ['lint'], function() {
     return gulp.src(paths.main_js)
-        .pipe(concat('all.js'))
+        .pipe(concat('script.js'))
         .pipe(ngAnnotate())
         .pipe(size({title: 'JS Pre-Minification'}))
         .pipe(gulp.dest('src/js'))
@@ -91,10 +86,19 @@ gulp.task('pre-build-scripts', ['lint'], function() {
         .pipe(gulp.dest('src/js'));
 });
 
+gulp.task('sass', function () {
+    return gulp.src(paths.sass_styles)
+        .pipe(sass())
+        .pipe(rename({basename: "style"}))
+        .pipe(gulp.dest('src/styles'));
+});
+
 gulp.task('pre-build-styles', ['sass'], function() {
     return gulp.src(paths.compiled_styles)
+        .pipe(size({title: 'Styles Pre-Minification'}))
         .pipe(minifycss())
         .pipe(rename({suffix: ".min"}))
+        .pipe(size({title: 'Styles Post-Minification'}))
         .pipe(gulp.dest('src/styles'));
 });
 

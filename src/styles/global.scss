@@ -14,7 +14,7 @@
 	top: 0;
 	bottom: 0;
 	right: 0;
-  width: 60%;
+	width: 60%;
 }
 
 .content {
@@ -24,11 +24,11 @@
 .sidebar_header {
 	letter-spacing: 0.3em;
 	font-size: 28px;
-  font-weight: normal;
+	font-weight: normal;
 }
 
 .repos {
-  margin-top: 25px;
+	margin-top: 25px;
 }
 
 .repos li {
@@ -62,7 +62,7 @@
 }
 
 .general_info span:last-child {
-  margin-right: 0;
+	margin-right: 0;
 }
 
 .load_button a {
@@ -72,8 +72,8 @@
 	width: 397px;
 	padding: 6px;
 	font-size: 11px;
-  display: block;
-  margin-bottom: 5px;
+	display: block;
+	margin-bottom: 5px;
 }
 
 a {
@@ -83,7 +83,7 @@ a {
 
 .commits {
 	height: 600px;
-  margin-top: 25px;
+	margin-top: 25px;
 }
 
 .commits li {
@@ -99,39 +99,39 @@ a {
 	float: right;
 	font-size: 10px;
 	color: #9D9A9A;
-  font-weight: bold;
+	font-weight: bold;
 }
 
 .commit_message {
-  font-size: 14px;
-  color: #8B8989;
-  font-weight: bold;
-  display: block;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
+	font-size: 14px;
+	color: #8B8989;
+	font-weight: bold;
+	display: block;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
 }
 
 .commit_author {
 	font-size: 12px;
-  color: #9D9A9A;
-  display: block;
+	color: #9D9A9A;
+	display: block;
 }
 
 .commit_avatar {
 	background-color: #C7C7C7;
-  float: left;
+	float: left;
 }
 
 .commit_author_details {
-  margin-left: 35px;
-  display: block;
+	margin-left: 35px;
+	display: block;
 }
 
 .clearfix:after { 
-  content: "."; 
-  visibility: hidden; 
-  display: block; 
-  height: 0; 
-  clear: both;
+	content: "."; 
+	visibility: hidden; 
+	display: block; 
+	height: 0; 
+	clear: both;
 }
