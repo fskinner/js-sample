@@ -47,8 +47,6 @@ gulp.task('libs', function() {
         .pipe(gulp.dest('dist/libs'));
 });
 
-
-
 gulp.task('htmls', function() {
     return gulp.src(paths.html)
         .pipe(gulp.dest('dist'));
